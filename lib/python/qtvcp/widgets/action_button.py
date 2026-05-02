@@ -466,7 +466,8 @@ class ActionButton(IndicatedPushButton):
         # don't do anything if the signal is blocked
         if self._block_signal: return
         if self._no_action:
-            pass
+            # can be patched by handler
+            self.noActionFunction(self, state)
         elif self.estop:
             if self.isCheckable():
                 if STATUS.estop_is_clear():
@@ -880,6 +881,10 @@ class ActionButton(IndicatedPushButton):
             # otherwise set any optional label
             msg = 'MDI_COMMAND_{} Not found under [MDI_COMMAND_LIST] in INI file'.format(key)
             self.setToolTip(msg)
+
+    # re-definable/redirectable
+    def noActionFunction(self, widget, state):
+        pass
 
     #########################################################################
     # This is how designer can interact with our widget properties.
