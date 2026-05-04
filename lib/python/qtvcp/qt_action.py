@@ -250,6 +250,10 @@ class _Lcnc_Action(object):
             # check for oword and confirm path exists
             try:
                 result = self.extract_oword_basename(code)
+                if any(char.isupper() for char in result):
+                    LOG.error(f'Oword {result}.ngc: filename cannot have uppercase letters.')
+                    self.SET_ERROR_MESSAGE(f'Oword {result}.ngc: filename cannot have uppercase letters.')
+                    return
                 if not INFO.is_in_known_paths(result+'.ngc'):
                     LOG.error(f'Oword {result}.ngc path not found in INI paths. See system log')
                     self.SET_ERROR_MESSAGE(f'Oword {result}.ngc path not found')
@@ -1122,7 +1126,7 @@ class _Lcnc_Action(object):
         self._touchoff_error_return = None
 
     def extract_oword_basename(self, code):
-        tst = code.replace(' ','').lower()
+        tst = code.replace(' ','')
         if 'o<' in tst:
             ci = code.find('<')
             result = code[ci + 1:]
